@@ -12,8 +12,7 @@ class WelcomePage extends StatefulWidget {
 }
 
 class _WelcomePageState extends State<WelcomePage> {
-  int _counter = 0;
-
+  
   
   void _navegarParaLoginPage() {
     Navigator.push(
@@ -36,6 +35,7 @@ class _WelcomePageState extends State<WelcomePage> {
 
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Color(0xff359f8a),
         title: Text(widget.title),
       ),
       body: Container(

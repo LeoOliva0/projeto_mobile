@@ -13,6 +13,7 @@ class CadastroPage extends StatelessWidget {
     double ffem = fem * 0.97;
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Color(0xff359f8a),
         title: Text('Cadastro'),
       ),
       body: Container(
@@ -200,8 +201,8 @@ class CadastroPage extends StatelessWidget {
                         // Navegar para a tela de boas-vindas e exibir uma mensagem
                       },
                       style: ElevatedButton.styleFrom(
-                        primary: Color(0xff1a1f24),
-                        onPrimary: Color(0xffffffff),
+                        backgroundColor: Color(0xff1a1f24),
+                        
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(8 * fem),
                         ),

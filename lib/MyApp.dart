@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:projeto_mobile/HomePage.dart';
 import 'WelcomePage.dart';
 
 class MyApp extends StatelessWidget {
@@ -11,7 +12,7 @@ class MyApp extends StatelessWidget {
         
         primarySwatch: Colors.green,
       ),
-      home:const  WelcomePage(title: 'YourTasks'),
+      home:const  WelcomePage(title: 'YourTasks',),
     );
   }
 }

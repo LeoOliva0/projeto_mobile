@@ -2,26 +2,15 @@ import 'package:flutter/material.dart';
 import 'LoginPage.dart';
 import 'CadastroPage.dart';
 
-class WelcomePage extends StatefulWidget {
-  const WelcomePage({Key? key, required this.title}) : super(key: key);
-
-  final String title;
-
-  @override
-  State<WelcomePage> createState() => _WelcomePageState();
-}
-
-class _WelcomePageState extends State<WelcomePage> {
-  
-  
-  void _navegarParaLoginPage() {
+class WelcomePage extends StatelessWidget {
+  void _navegarParaLoginPage(BuildContext context) {
     Navigator.push(
       context,
       MaterialPageRoute(builder: (context) => LoginPage()),
     );
   }
 
-  void _navegarParaCadastroPage() {
+  void _navegarParaCadastroPage(BuildContext context) {
     Navigator.push(
       context,
       MaterialPageRoute(builder: (context) => CadastroPage()),
@@ -34,28 +23,22 @@ class _WelcomePageState extends State<WelcomePage> {
     final double ffem = MediaQuery.of(context).textScaleFactor;
 
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Color(0xff359f8a),
-        title: Text(widget.title),
-      ),
       body: Container(
-        padding: EdgeInsets.fromLTRB(49 * fem, 121.5 * fem, 61.5 * fem, 163 * fem),
+        padding: EdgeInsets.all(25 * fem),
         width: double.infinity,
-        decoration: BoxDecoration(
-          color: Color(0xFF131619),
-        ),
+        color: Color(0xFF131619),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Container(
-              margin: EdgeInsets.fromLTRB(0, 0, 0, 41.5 * fem),
+              margin: EdgeInsets.only(bottom: 24 * fem),
               width: double.infinity,
               height: 57 * fem,
               child: Stack(
                 children: [
                   Positioned(
-                    left: 48.5 * fem,
-                    top: 11*fem,
+                    left: 80 * fem,
+                    top: 11 * fem,
                     child: Center(
                       child: Align(
                         child: SizedBox(
@@ -78,7 +61,7 @@ class _WelcomePageState extends State<WelcomePage> {
                     ),
                   ),
                   Positioned(
-                    left: 0,
+                    left: 28,
                     top: 6.5 * fem,
                     child: Align(
                       child: SizedBox(
@@ -94,26 +77,24 @@ class _WelcomePageState extends State<WelcomePage> {
                 ],
               ),
             ),
-            Container(
-              margin: EdgeInsets.fromLTRB(13.5 * fem, 0, 0, 191 * fem),
-              child: Text(
-                'Organize seus dias e sua vida!',
-                style: TextStyle(
-                  fontFamily: 'Outfit',
-                  fontSize: 17 * ffem,
-                  fontWeight: FontWeight.w400,
-                  height: 1.26 * ffem / fem,
-                  color: Color(0xFFFFFFFF),
-                ),
+            Text(
+              'Organize seus dias e sua vida!',
+              style: TextStyle(
+                fontFamily: 'Outfit',
+                fontSize: 17 * ffem,
+                fontWeight: FontWeight.w400,
+                height: 1.26 * ffem / fem,
+                color: Color(0xFFFFFFFF),
               ),
             ),
+            Spacer(),
             Padding(
-              padding: EdgeInsets.fromLTRB(37 * fem, 0, 27.5 * fem, 35 * fem),
+              padding: EdgeInsets.symmetric(horizontal: 16 * fem),
               child: SizedBox(
                 width: double.infinity,
                 height: 50 * fem,
                 child: ElevatedButton(
-                  onPressed: _navegarParaCadastroPage,
+                  onPressed: () => _navegarParaCadastroPage(context),
                   style: ElevatedButton.styleFrom(
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(8 * fem),
@@ -132,13 +113,14 @@ class _WelcomePageState extends State<WelcomePage> {
                 ),
               ),
             ),
+            SizedBox(height: 16 * fem),
             Padding(
-              padding: EdgeInsets.fromLTRB(38 * fem, 0, 26.5 * fem, 0),
+              padding: EdgeInsets.symmetric(horizontal: 16 * fem),
               child: SizedBox(
                 width: double.infinity,
                 height: 50 * fem,
                 child: ElevatedButton(
-                  onPressed: _navegarParaLoginPage,
+                  onPressed: () => _navegarParaLoginPage(context),
                   style: ElevatedButton.styleFrom(
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(8 * fem),
@@ -150,13 +132,13 @@ class _WelcomePageState extends State<WelcomePage> {
                       fontWeight: FontWeight.w600,
                       height: 1.26 * ffem / fem,
                       letterSpacing: 0.64 * fem,
-                      
                     ),
                   ),
                   child: Text('LOGIN'),
                 ),
               ),
             ),
+            Spacer(),
           ],
         ),
       ),

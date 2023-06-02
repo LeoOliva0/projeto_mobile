@@ -1,40 +1,31 @@
 import 'package:flutter/material.dart';
 
-class BottomMenu extends StatefulWidget {
-  final void Function(int) onItemSelected;
+class BottomNavigationWidget extends StatelessWidget {
+  final int currentIndex;
+  final Function(int) onTap;
 
-  const BottomMenu({Key? key, required this.onItemSelected}) : super(key: key);
-
-  @override
-  _BottomMenuState createState() => _BottomMenuState();
-}
-
-class _BottomMenuState extends State<BottomMenu> {
-  int _selectedItemIndex = 0;
+  const BottomNavigationWidget({
+    required this.currentIndex,
+    required this.onTap,
+  });
 
   @override
   Widget build(BuildContext context) {
     return BottomNavigationBar(
-      
-      currentIndex: _selectedItemIndex,
-      onTap: (index) {
-        setState(() {
-          _selectedItemIndex = index;
-          widget.onItemSelected(index);
-        });
-      },
+      currentIndex: currentIndex,
+      onTap: onTap,
       items: [
         BottomNavigationBarItem(
           icon: Icon(Icons.event),
           label: 'Eventos',
         ),
         BottomNavigationBarItem(
-          icon: Icon(Icons.check),
+          icon: Icon(Icons.assignment),
           label: 'Tarefas',
         ),
-         BottomNavigationBarItem(
+        BottomNavigationBarItem(
           icon: Icon(Icons.settings),
-          label: 'Configuraçoes',
+          label: 'Configurações',
         ),
       ],
     );

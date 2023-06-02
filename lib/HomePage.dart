@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:table_calendar/table_calendar.dart';
+import './TarefasPage.dart';
+import './ConfigurationPage.dart';
+import './MenuBar.dart';
 
 class Event {
   final String title;
@@ -16,12 +19,6 @@ class HomePage extends StatefulWidget {
   _HomePageState createState() => _HomePageState();
 }
 
-enum MenuOptions {
-  Eventos,
-  Tarefas,
-  Configuracoes,
-}
-
 class _HomePageState extends State<HomePage> {
   CalendarFormat _calendarFormat = CalendarFormat.month;
   DateTime _focusedDay = DateTime.now();
@@ -30,138 +27,157 @@ class _HomePageState extends State<HomePage> {
 
   TextEditingController _eventTitleController = TextEditingController();
   TextEditingController _eventDescriptionController = TextEditingController();
-  MenuOptions _selectedMenuOption = MenuOptions.Eventos;
+
+  int _currentTab = 0;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      resizeToAvoidBottomInset:
-          false, // Evita o erro de overflow ao abrir o teclado
+      resizeToAvoidBottomInset: false, // Evita o erro de overflow ao abrir o teclado
       appBar: AppBar(
         backgroundColor: Color(0xff359f8a),
         title: Text('Bem-vindo!'),
       ),
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Text(
-              'Calendário:',
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-              ),
+      body: _buildBody(),
+      bottomNavigationBar: BottomNavigationWidget(
+        currentIndex: _currentTab,
+        onTap: (index) {
+          setState(() {
+            _currentTab = index;
+          });
+        },
+      ),
+      floatingActionButton: _buildFloatingActionButton(),
+    );
+  }
+
+  Widget _buildBody() {
+    switch (_currentTab) {
+      case 0:
+        return _buildEventosTab();
+      case 1:
+        return TarefasPage();
+      case 2:
+        return ConfigurationPage();
+      default:
+        return Container();
+    }
+  }
+
+  Widget _buildEventosTab() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Text(
+            'Calendário:',
+            style: TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
             ),
           ),
-          Expanded(
-            child: TableCalendar(
-              firstDay: DateTime.utc(2023, 01, 01),
-              lastDay: DateTime.utc(2030, 01, 01),
-              focusedDay: _focusedDay,
-              calendarFormat: _calendarFormat,
-              selectedDayPredicate: (day) {
-                return isSameDay(_selectedDay, day);
-              },
-              onDaySelected: (selectedDay, focusedDay) {
-                if (!isSameDay(_selectedDay, selectedDay)) {
-                  setState(() {
-                    _selectedDay = selectedDay;
-                    _focusedDay = focusedDay;
-                  });
-                }
-              },
-              onFormatChanged: (format) {
-                if (_calendarFormat != format) {
-                  setState(() {
-                    _calendarFormat = format;
-                  });
-                }
-              },
-              onPageChanged: (focusedDay) {
+        ),
+        TableCalendar(
+          firstDay: DateTime.utc(2023, 01, 01),
+          lastDay: DateTime.utc(2030, 01, 01),
+          focusedDay: _focusedDay,
+          calendarFormat: _calendarFormat,
+          selectedDayPredicate: (day) {
+            return isSameDay(_selectedDay, day);
+          },
+          onDaySelected: (selectedDay, focusedDay) {
+            if (!isSameDay(_selectedDay, selectedDay)) {
+              setState(() {
+                _selectedDay = selectedDay;
                 _focusedDay = focusedDay;
-              },
-              eventLoader: (day) {
-                return _events[day] ?? [];
-              },
-              calendarStyle: CalendarStyle(
-                markerDecoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: Color(0xff359f8a),
-                ),
-                selectedDecoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: Color(0xff359f8a),
-                ),
-                todayDecoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: Color(0xff359f8a),
-                ),
-              ),
+              });
+            }
+          },
+          onFormatChanged: (format) {
+            if (_calendarFormat != format) {
+              setState(() {
+                _calendarFormat = format;
+              });
+            }
+          },
+          onPageChanged: (focusedDay) {
+            _focusedDay = focusedDay;
+          },
+          eventLoader: (day) {
+            return _events[day] ?? [];
+          },
+          calendarStyle: CalendarStyle(
+            markerDecoration: BoxDecoration(
+              shape: BoxShape.circle,
+              color: Color(0xff359f8a),
+            ),
+            selectedDecoration: BoxDecoration(
+              shape: BoxShape.circle,
+              color: Color(0xff359f8a),
+            ),
+            todayDecoration: BoxDecoration(
+              shape: BoxShape.circle,
+              color: Color(0xff359f8a),
             ),
           ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16.0),
-            child: Text(
-              'Lista de Eventos:',
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-              ),
+        ),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16.0),
+          child: Text(
+            'Lista de Eventos:',
+            style: TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
             ),
           ),
-          Expanded(
-            child: SingleChildScrollView(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  ListView.builder(
-                    shrinkWrap: true,
-                    physics: NeverScrollableScrollPhysics(),
-                    itemCount: _events[_selectedDay]?.length ?? 0,
-                    itemBuilder: (context, index) {
-                      final event = _events[_selectedDay]![index];
-                      return ListTile(
+        ),
+        Expanded(
+          child: ListView.builder(
+            itemCount: _events[_selectedDay]?.length ?? 0,
+            itemBuilder: (context, index) {
+              final event = _events[_selectedDay]![index];
+              return ListTile(
+                title: Text(event.title),
+                subtitle: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(event.description),
+                    Text(
+                      'Data do evento: ${event.date.day}/${event.date.month}/${event.date.year}',
+                    ),
+                  ],
+                ),
+                onTap: () {
+                  showDialog(
+                    context: context,
+                    builder: (context) {
+                      return AlertDialog(
                         title: Text(event.title),
-                        subtitle: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(event.description),
-                            Text(
-                              'Data do evento: ${event.date.day}/${event.date.month}/${event.date.year}',
-                            ),
-                          ],
-                        ),
-                        onTap: () {
-                          showDialog(
-                            context: context,
-                            builder: (context) {
-                              return AlertDialog(
-                                title: Text(event.title),
-                                content: Text(event.description),
-                                actions: [
-                                  ElevatedButton(
-                                    onPressed: () {
-                                      Navigator.pop(context);
-                                    },
-                                    child: Text('Fechar'),
-                                  ),
-                                ],
-                              );
+                        content: Text(event.description),
+                        actions: [
+                          ElevatedButton(
+                            onPressed: () {
+                              Navigator.pop(context);
                             },
-                          );
-                        },
+                            child: Text('Fechar'),
+                          ),
+                        ],
                       );
                     },
-                  ),
-                ],
-              ),
-            ),
+                  );
+                },
+              );
+            },
           ),
-        ],
-      ),
-      floatingActionButton: FloatingActionButton(
-        
+        ),
+      ],
+    );
+  }
+
+  Widget _buildFloatingActionButton() {
+    if (_currentTab == 0) {
+      return FloatingActionButton(
         onPressed: () {
           showDialog(
             context: context,
@@ -217,50 +233,9 @@ class _HomePageState extends State<HomePage> {
         },
         child: Icon(Icons.add),
         backgroundColor: Color(0xff359f8a),
-      ),
-      bottomNavigationBar: BottomMenu(
-        selectedIndex: _selectedMenuOption.index,
-        onItemSelected: (index) {
-          setState(() {
-            _selectedMenuOption = MenuOptions.values[index];
-          });
-        },
-      ),
-    );
-  }
-}
-
-class BottomMenu extends StatelessWidget {
-  final int selectedIndex;
-  final void Function(int) onItemSelected;
-
-  const BottomMenu({
-    Key? key,
-    required this.selectedIndex,
-    required this.onItemSelected,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return BottomNavigationBar(
-      backgroundColor: Color(0xff1a1f24),
-      unselectedItemColor: Color(0xffffffff),
-      currentIndex: selectedIndex,
-      onTap: onItemSelected,
-      items: [
-        BottomNavigationBarItem(
-          icon: Icon(Icons.event),
-          label: 'Eventos',
-        ),
-        BottomNavigationBarItem(
-          icon: Icon(Icons.task),
-          label: 'Tarefas',
-        ),
-        BottomNavigationBarItem(
-          icon: Icon(Icons.settings),
-          label: 'Configurações',
-        ),
-      ],
-    );
+      );
+    } else {
+      return Container();
+    }
   }
 }
